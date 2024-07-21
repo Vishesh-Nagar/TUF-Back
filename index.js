@@ -2,23 +2,19 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-require('dotenv').config();
-
 const app = express();
 const port = process.env.PORT || 5000;
+require('dotenv').config();
 
-// Middleware
 app.use(cors());
 app.use(bodyParser.json());
 
-// Database connection
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 
-// Define the Snippet model
 const Snippet = mongoose.model('Snippet', new mongoose.Schema({
   username: String,
   codeLanguage: String,
@@ -27,7 +23,6 @@ const Snippet = mongoose.model('Snippet', new mongoose.Schema({
   timestamp: { type: Date, default: Date.now },
 }));
 
-// Routes
 app.post('/submit', async (req, res) => {
   const { username, codeLanguage, stdin, sourceCode } = req.body;
   try {
@@ -48,7 +43,6 @@ app.get('/snippets', async (req, res) => {
   }
 });
 
-// Start the server
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
